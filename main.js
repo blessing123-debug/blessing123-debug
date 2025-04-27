@@ -659,6 +659,52 @@ case userMessage.startsWith('.autolike'):
     await autoLikeCommand(sock, chatId, senderId, autoLikeArgs); // Call the autoLikeCommand function
     break;
 
+                const { WAConnection } = require('@adiwajshing/baileys'); // or any other relevant library
+const { autoLikeCommand, handleStatusUpdate } = require('./path_to_autolike_file'); // Import your autolike handler
+
+const sock = new WAConnection();
+
+// Handle WhatsApp connection
+sock.on('open', () => {
+    console.log('Bot connected to WhatsApp!');
+});
+
+// Listen for new incoming messages
+sock.on('message-new', async (message) => {
+    try {
+        if (message.message && message.message.conversation) {
+            const chatId = message.key.remoteJid;
+            const senderId = message.key.fromMe ? sock.user.jid : message.key.participant;
+            const args = message.message.conversation.split(' ');
+
+            // If the message is the .autolike command
+            if (args[0].toLowerCase() === '.autolike') {
+                await autoLikeCommand(sock, chatId, senderId, args.slice(1)); // Handle autolike command
+            }
+        }
+    } catch (err) {
+        console.error('Error processing message:', err);
+    }
+});
+
+// Listen for status updates (for auto-liking)
+sock.on('status-update', async (status) => {
+    try {
+        console.log('Received status update:', status); // Debugging line, you can remove this later
+        await handleStatusUpdate(sock, status); // Auto-like function
+    } catch (err) {
+        console.error('Error handling status update:', err);
+    }
+});
+
+// Function to connect to WhatsApp
+async function connect() {
+    await sock.connect(); // Connect the bot
+}
+
+connect(); // Initialize the connection
+
+
     
             case userMessage.startsWith('.simp'):
                 await simpCommand(sock, chatId, message);
