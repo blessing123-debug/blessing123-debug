@@ -648,10 +648,17 @@ async function handleMessages(sock, messageUpdate, printLog) {
                 const autoStatusArgs = userMessage.split(' ').slice(1);
                 await autoStatusCommand(sock, chatId, senderId, autoStatusArgs);
                 break;
-            case userMessage.startsWith('.autolike'):
-                const autoLikeArgs = userMessage.split(' ').slice(1);
-                await autoLikeCommand(sock, chatId, senderId, autoLikeArgs);
-                break;
+           // main.js
+
+const { autoLikeCommand } = require('./commands/autolike'); // Import the autoLikeCommand
+
+// Inside the message handler (where you're processing user messages)
+
+case userMessage.startsWith('.autolike'):
+    const autoLikeArgs = userMessage.split(' ').slice(1); // Split the message and extract arguments
+    await autoLikeCommand(sock, chatId, senderId, autoLikeArgs); // Call the autoLikeCommand function
+    break;
+
     
             case userMessage.startsWith('.simp'):
                 await simpCommand(sock, chatId, message);
